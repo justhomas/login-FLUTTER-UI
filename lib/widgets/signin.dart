@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_login_template/utilities/utilities.dart';
+import 'package:flutter_login_template/utilities/formatters.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_login_template/widgets/signup.dart';
 import 'package:flutter_login_template/widgets/forgotPassword.dart';
@@ -12,19 +12,6 @@ import 'package:flutter_login_template/widgets/signInWith.dart';
 class LoginWidget extends StatefulWidget {
   @override
   _LoginWidgetState createState() => _LoginWidgetState();
-}
-
-class EmailInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.startsWith('@') || newValue.text.startsWith('.')) {
-      print(oldValue);
-      return oldValue;
-    }
-
-    return newValue;
-  }
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
