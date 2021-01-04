@@ -29,7 +29,7 @@ class MyCustomRoute<T> extends MaterialPageRoute<T> {
 class _SignUpWidgetState extends State<SignUpWidget> {
   bool checking = false;
   bool loginWithCredentials = false;
-
+  TextEditingController _passwordController;
   @override
   void initState() {
     super.initState();
@@ -63,8 +63,10 @@ class _SignUpWidgetState extends State<SignUpWidget> {
             prefixStyle: TextStyle(),
             hintText: 'Enter your email'),
       ),
-      PasswordField(label: 'Enter your password'),
-      PasswordField(label: 'Confirm your password'),
+      PasswordField(
+        label: 'Enter your password',
+        controller: _passwordController,
+      ),
       RaisedButton(
           onPressed: () {},
           color: Color.fromRGBO(22, 160, 133, 1.0),

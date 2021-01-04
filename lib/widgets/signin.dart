@@ -17,15 +17,60 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   bool checking = false;
   bool loginWithCredentials = false;
-  bool enableSignIn = false;
+  bool enableSignIn = true;
   Map error = {'email': ''};
   TextEditingController _emailController;
+  TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
     checking = false;
     loginWithCredentials = false;
+  }
+
+  Future<AuthState> authenticationDemo() async {
+    AuthState a = await Future.delayed(Duration(seconds: 3)).then((value) {
+      return AuthState.isNotAuthenticated;
+    });
+    return a;
+  }
+
+  void authenticate(BuildContext context) {
+    checking = true;
+    enableSignIn = false;
+    setState(() {});
+
+    //authenticate=ion code;
+    authenticationDemo().then((AuthState s) {
+      if (s == AuthState.isNotAuthenticated) {
+        checking = false;
+        enableSignIn = true;
+        setState(() {});
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content:
+                  Text('The username of password you have entered is wrong'),
+              actions: [
+                FlatButton(
+                  textColor: Colors.black,
+                  onPressed: () {},
+                  child: Text('Reset Password'),
+                ),
+                FlatButton(
+                  textColor: Colors.black,
+                  onPressed: () {},
+                  child: Text('Retry'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   @override
@@ -57,6 +102,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               hintText: 'Enter your email')),
       PasswordField(
         label: 'Enter your password',
+        controller: _passwordController,
       ),
       Align(
         alignment: Alignment.centerRight,
@@ -69,13 +115,25 @@ class _LoginWidgetState extends State<LoginWidget> {
             child: Text('Forgot Password?')),
       ),
       RaisedButton(
-        onPressed: enableSignIn ? () {} : null,
+        onPressed: enableSignIn
+            ? () {
+                authenticate(context);
+              }
+            : null,
         disabledColor: Color.fromRGBO(22, 160, 133, 0.35),
         color: Color.fromRGBO(22, 160, 133, 1.0),
-        child: Text(
-          'Sign In',
-          style: TextStyle(color: Colors.white),
-        ),
+        child: checking
+            ? SizedBox(
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+                height: 15,
+                width: 15,
+              )
+            : Text(
+                'Sign In',
+                style: TextStyle(color: Colors.white),
+              ),
       ),
     ];
 
