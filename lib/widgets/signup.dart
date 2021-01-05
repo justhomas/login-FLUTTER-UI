@@ -136,7 +136,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                     Text('Already have an Account?'),
                     FlatButton(
                         onPressed: () {
-                          Navigator.pop(
+                          Navigator.pushReplacement(
                               context,
                               MyCustomRoute(
                                   builder: (context) => LoginWidget()));

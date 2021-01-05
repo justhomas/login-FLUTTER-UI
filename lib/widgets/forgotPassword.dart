@@ -15,6 +15,7 @@ class ForgotPasswordWidget extends StatefulWidget {
 class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
   bool otpSent = false;
   bool otpReSent = false;
+  bool checking = false;
   bool loginWithCredentials = false;
   Map<String, String> error = {'otpVerifyInput': ''};
 
@@ -53,6 +54,56 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  Future<bool> sendOTPDemo() async {
+    bool a = await Future.delayed(Duration(seconds: 3)).then((value) {
+      return true;
+    });
+    return a;
+  }
+
+  void sendOtp(BuildContext context) {
+    checking = true;
+    setState(() {});
+
+    sendOTPDemo().then((bool s) {
+      if (s) {
+        otpSent = true;
+        startTimer();
+        setState(() {});
+      } else {
+        otpSent = false;
+        checking = false;
+        setState(() {});
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Account not found'),
+              content: Text(
+                  'The details you have entered does not correspond to any account. Please check it again'),
+              actions: [
+                FlatButton(
+                  textColor: Colors.black,
+                  onPressed: () {},
+                  child: Text('Try Again'),
+                ),
+                FlatButton(
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MyCustomRoute(builder: (context) => SignUpWidget()));
+                  },
+                  child: Text('Create an Account'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   @override
@@ -109,16 +160,24 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
             )
           : RaisedButton(
               color: Colors.blueAccent,
-              onPressed: () {
-                otpSent = true;
-                startTimer();
-
-                setState(() {});
-              },
-              child: Text(
-                'Send OTP',
-                style: TextStyle(color: Colors.white),
-              ),
+              onPressed: checking
+                  ? null
+                  : () {
+                      sendOtp(context);
+                    },
+              child: checking
+                  ? SizedBox(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            new AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                      height: 15,
+                      width: 15,
+                    )
+                  : Text(
+                      'Send OTP',
+                      style: TextStyle(color: Colors.white),
+                    ),
             ),
       otpSent
           ? Row(
